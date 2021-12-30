@@ -1,0 +1,1 @@
+[ ] Test all scripts in hog_svm folder
