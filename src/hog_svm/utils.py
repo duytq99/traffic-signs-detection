@@ -38,3 +38,5 @@ def extract_feature(path, method = 'skimage'):
     labels = np.stack(labels, axis=0)
     print("[INFO] Feature shape: {}".format(data.shape))
     return data, labels, filenames
+
+

@@ -6,13 +6,13 @@ import argparse
 import numpy as np
 from skimage.feature import hog
 from sklearn.linear_model import SGDClassifier
+from sklearn.calibration import CalibratedClassifierCV
 from svm import LinearSVM
 
-default_test_img = r'images\test-3-classes\3\858.png'
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--img_path", required=False, default=default_test_img, help="Path to test image")
+    parser.add_argument("-p", "--img_path", required=False, default='data/temp/3_858.png', help="Path to test image")
     parser.add_argument("-m", "--model", choices=['sklearn', 'scratch'], required=True, help="Choose type of implementation")
     parser.add_argument("-p", "--model_path", required=False, default='model', help="Model save path")
     return parser.parse_args()
@@ -34,7 +34,7 @@ def main():
         transform_sqrt=True, 
         visualize=False,
         block_norm='L2')
-        
+
     data = np.stack(hogFeature, axis=0)
     data = np.expand_dims(data, axis=0)
     data = np.hstack([data, np.ones((data.shape[0], 1))])
@@ -49,11 +49,17 @@ def main():
     else:
         load_svm = SGDClassifier()
         load_svm = pickle.load(open(os.path.join(args.save_path, 'svm_sklearn.sav'), 'rb'))
-        label = load_svm.predict(data.reshape((1,-1)))
+        clf = CalibratedClassifierCV(load_svm)
+        label = clf.predict(data.reshape((1,-1)))
+        score = clf.predict_proba(data.reshape((1,-1)))
 
-    print("[INFO] predicting time: ", time.time()-start)
     labels_list = ['cam nguoc chieu', 'cam dung va do', 'cam re', 'gioi han toc do', 'cam khac', 'nguy hiem', 'hieu lenh', 'negative']
+    print("[INFO] predicting time: ", time.time()-start)
     print('[INFO] Predicting result: ', labels_list[int(label)])
+    try:
+        print('[INFO] Confident score: ', score)
+    except:
+        pass
 
 if __name__ == '__main__':
     main()
