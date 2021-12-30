@@ -24,7 +24,7 @@ def _hog_normalize_block(block, method, eps=1e-5):
 	return out
 
 
-def hogDescriptorScratch(im, cell_size=(8,8), orientations = 9, block_norm = None, cells_per_block=(4,4), visualize = True, visualize_grad=False):
+def hog_descriptor_scratch(im, cell_size=(8,8), orientations = 9, block_norm = None, cells_per_block=(4,4), visualize = True, visualize_grad=False):
 	# square root normalization and extract image shape
 	image = np.sqrt(im).astype(np.float32)
 	sx, sy = image.shape # image size
@@ -115,7 +115,7 @@ def main():
 	im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
 	start = time.time()
-	hogFeatureScratch, hogImageScratch = hogDescriptorScratch(
+	hogFeatureScratch, hogImageScratch = hog_descriptor_scratch(
 		im, 
 		orientations=args.orientations, 
 		cell_size=(args.cell_size, args.cell_size), 
