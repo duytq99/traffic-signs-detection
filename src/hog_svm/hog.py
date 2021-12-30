@@ -101,12 +101,12 @@ def parse_arguments():
 	parser.add_argument('-cs', '--cell_size', default=4, type=int, required=False, help='size of cell')
 	parser.add_argument('-cb', '--cell_per_block', default=8, type=int, required=False, help='number of cells per block')
 	parser.add_argument('-n', '--block_norm', type=str, default='L2', required=False, help='block normalization method')
-	parser.add_argument('-v', '--visualize_results', type=bool, action='store_true', help='visualize processed images')
-	parser.add_argument('--save', type=bool, default=True)
+	parser.add_argument('-v', '--visualize_results', type=bool, default=True, help='visualize processed images')
+	parser.add_argument('--save', action='store_true')
 	return parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
 	args = parse_arguments()
 
 	im = cv2.imread(args.path)
@@ -141,8 +141,9 @@ if __name__ == '__main__':
 	print("Feature vector: ", hogFeatureSkimage)
 	print("Feature vector shape: ", hogFeatureSkimage.shape)
 
+	plt.rcParams['figure.figsize'] = (10.0, 8.0) # set default size of plot
 	# visualize experiment result
-	fig, a = plt.subplots(1,3)    
+	fig, a = plt.subplots(1,3)
 	a[0].imshow(cv2.cvtColor(im_orig, cv2.COLOR_BGR2RGB))
 	a[0].set_title('Original traffic sign')
 	a[1].imshow(hogImageSkimage, cmap='gray')
@@ -150,11 +151,15 @@ if __name__ == '__main__':
 	a[2].imshow(hogImageScratch, cmap='gray')
 	a[2].set_title('HOG feature from scratch')
 	plt.tight_layout()
-	plt.savefig('../output/fig.png')
+	plt.savefig('output/fig.png')
 	plt.show()
 
 	hogImageScratch = np.stack([hogImageScratch,hogImageScratch,hogImageScratch],axis=-1)
 	print(hogImageScratch.shape)
-	cv2.imwrite('../output/ori.png', im_orig)
-	cv2.imwrite('../output/hog_scratch.png', hogImageScratch)
+	cv2.imwrite('output/ori.png', im_orig)
+	cv2.imwrite('output/hog_scratch.png', hogImageScratch)
+
+
+if __name__ == '__main__':
+    main()
 	
