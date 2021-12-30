@@ -1,2 +1,2 @@
-# dl-project-template
-This is a template for Deep Learning project
+# traffic-signs-detection
+Traffic signs detection using ML and DL
